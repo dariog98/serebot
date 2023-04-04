@@ -100,6 +100,18 @@ foreach($command_entities as $entity) {
             json_encode($update["message"]["reply_to_message"], JSON_PRETTY_PRINT)
         );
     }
+
+    if ($command == "/commands") {
+        $commands = array(
+            "/toJSON" => "Returns in JSON format the data of the replied message",
+            "/commands" => "Returns a message with the current list of commands"
+        );
+        SendResponse::send_message(
+            $website,
+            $message->get_chat()->get_id(),
+            json_encode($commands, JSON_PRETTY_PRINT)
+        );
+    }
 }
 
 ?>
