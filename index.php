@@ -42,7 +42,7 @@
         <div class="container">
             <div>
                 <div class="d-flex flex-column justify-content-center">
-                    <p class="text-center">@Serebot</p>
+                    <p class="text-center">Serebot</p>
                     <p class="text-center">Serebot is a minimalist Telegram bot</p>
                     <h5 class="text-center">Commands Availables</h5>
 
