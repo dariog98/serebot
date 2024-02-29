@@ -94,11 +94,19 @@ $command_entities = array_filter($message->get_entities(), function($value, $key
 foreach($command_entities as $entity) {
     $command = substr($message->get_text(), $entity->get_offset(), $entity->get_length());
     if ($command == "/toJSON") {
-        SendResponse::send_message(
-            $website,
-            $message->get_chat()->get_id(),
-            json_encode($update["message"]["reply_to_message"], JSON_PRETTY_PRINT)
-        );
+        if (is_null($message->get_reply_message())) {
+            SendResponse::send_message(
+                $website,
+                $message->get_chat()->get_id(),
+                'Reply a message with /toJSON to see the content of the reply message in JSON format'
+            );
+        } else {
+            SendResponse::send_message(
+                $website,
+                $message->get_chat()->get_id(),
+                json_encode($message->get_reply_message(), JSON_PRETTY_PRINT)
+            );
+        }
     }
 
     if ($command == "/commands") {
@@ -109,7 +117,8 @@ foreach($command_entities as $entity) {
         SendResponse::send_message(
             $website,
             $message->get_chat()->get_id(),
-            json_encode($commands, JSON_PRETTY_PRINT)
+            //json_encode($commands, JSON_PRETTY_PRINT)
+            "/toJSON -> Returns in JSON format the data of the replied message\n/commands -> Returns a message with the current list of commands"
         );
     }
 }
