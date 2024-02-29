@@ -104,7 +104,7 @@ foreach($command_entities as $entity) {
             SendResponse::send_message(
                 $website,
                 $message->get_chat()->get_id(),
-                json_encode($message->get_reply_message(), JSON_PRETTY_PRINT)
+                json_encode($update["message"]["reply_to_message"], JSON_PRETTY_PRINT)
             );
         }
     }
