@@ -10,12 +10,12 @@ $website = "https://api.telegram.org/bot" . $bot_token;
 $update = file_get_contents('php://input');
 $update = json_decode($update, TRUE);
 
-include_once("chat.php");
-include_once("user.php");
-include_once("message.php");
-include_once("messageentity.php");
-include_once("sticker.php");
-include_once("sendresponse.php");
+include_once("engine/chat.php");
+include_once("engine/user.php");
+include_once("engine/message.php");
+include_once("engine/messageentity.php");
+include_once("engine/sticker.php");
+include_once("engine/sendresponse.php");
 
 function create_message($data) {
     // Loading Message Data
@@ -93,34 +93,14 @@ $command_entities = array_filter($message->get_entities(), function($value, $key
 
 foreach($command_entities as $entity) {
     $command = substr($message->get_text(), $entity->get_offset(), $entity->get_length());
-    if ($command == "/toJSON") {
-        if (is_null($message->get_reply_message())) {
-            SendResponse::send_message(
-                $website,
-                $message->get_chat()->get_id(),
-                'Reply a message with /toJSON to see the content of the reply message in JSON format'
-            );
-        } else {
-            SendResponse::send_message(
-                $website,
-                $message->get_chat()->get_id(),
-                json_encode($update["message"]["reply_to_message"], JSON_PRETTY_PRINT)
-            );
-        }
-    }
 
-    if ($command == "/commands") {
-        $commands = array(
-            "/toJSON" => "Returns in JSON format the data of the replied message",
-            "/commands" => "Returns a message with the current list of commands"
-        );
-        SendResponse::send_message(
-            $website,
-            $message->get_chat()->get_id(),
-            //json_encode($commands, JSON_PRETTY_PRINT)
-            "/toJSON -> Returns in JSON format the data of the replied message\n/commands -> Returns a message with the current list of commands"
-        );
-    }
+    $response = Commands::resolve($command, $message);
+
+    SendResponse::send_message(
+        $website,
+        $message->get_chat()->get_id(),
+        $response
+    );
 }
 
 ?>

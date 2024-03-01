@@ -1,7 +1,6 @@
 <?php
 
 class SendResponse {
-
     public static function send_message($bot_website, $chat_id, $response){
         $url = $bot_website . "/sendMessage";
         $context = array (
