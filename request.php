@@ -16,6 +16,7 @@ include_once("engine/message.php");
 include_once("engine/messageentity.php");
 include_once("engine/sticker.php");
 include_once("engine/sendresponse.php");
+include_once("../engine/commands.php");
 
 function create_message($data) {
     // Loading Message Data
