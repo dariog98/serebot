@@ -1,5 +1,10 @@
 <?php
 
+include_once("chat.php");
+include_once("user.php");
+include_once("messageentity.php");
+include_once("sticker.php");
+
 class Message {
     private $chat;
     private $user;
@@ -56,6 +61,67 @@ class Message {
             "sticker" => $this->sticker ? $this->sticker->get_data() : null,
             "reply_to_message" => $this->reply_to_message ? $this->reply_to_message->get_data() : null
         );
+    }
+
+    public static function create_message_from_data($data) {
+        $user = new User(
+            $data["from"]["id"],
+            $data["from"]["is_bot"],
+            $data["from"]["first_name"],
+            $data["from"]["last_name"],
+            $data["from"]["username"]
+        );
+    
+        $chat = ($data["chat"]["type"] == "private")
+            ? new PrivateChat(
+                $data["chat"]["id"],
+                $data["chat"]["first_name"],
+                $data["chat"]["last_name"],
+                $data["chat"]["username"]
+            )
+            : new GroupChat(
+                $data["chat"]["id"],
+                $data["chat"]["title"]
+            );
+        
+        $date = $data["date"];
+        
+        $message = new Message($chat, $user, $date);
+    
+        if ( isset($data["text"]) ) {
+            $message->add_text($data["text"]);
+        }
+    
+        if ( isset($data["sticker"]) ) {
+            $message->add_sticker(
+                new Sticker(
+                    $data["sticker"]["file_unique_id"],
+                    $data["sticker"]["emoji"],
+                    $data["sticker"]["set_name"]
+                )
+            );
+        }
+    
+        if ( isset($data["entities"]) ) {
+            foreach ($data["entities"] as $entity) {
+                $message->add_entity(
+                    new MessageEntity(
+                        $entity["type"],
+                        $entity["offset"],
+                        $entity["length"],
+                        $entity["url"],
+                        $entity["user"],
+                        $entity["custom_emoji_id"]
+                    )
+                );
+            }
+        }
+    
+        if ( isset($data["reply_to_message"]) ) {
+            $message->add_reply_message(create_message($data["reply_to_message"]));
+        }
+    
+        return $message;
     }
 }
 

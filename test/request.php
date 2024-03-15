@@ -1,14 +1,11 @@
 <?php
+
 $json = file_get_contents('php://input');
 $update = json_decode($json, TRUE);
 
-include_once("../engine/chat.php");
-include_once("../engine/user.php");
 include_once("../engine/message.php");
-include_once("../engine/messageentity.php");
-include_once("../engine/sticker.php");
-include_once("../engine/sendtestresponse.php");
 include_once("../engine/commands.php");
+include_once("../engine/sendtestresponse.php");
 
 function create_message($data) {
     $chat = new PrivateChat(1, 'Serebot', 'Tester', 'tester');
@@ -41,7 +38,7 @@ function create_message($data) {
     return $message;
 }
 
-$message = create_message($update);
+$message = Message::create_message_from_data($update);
 
 $command_entities = array_filter($message->get_entities(), function($value, $key) {
     return $value->get_type() == "bot_command";
