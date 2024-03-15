@@ -6,6 +6,9 @@ class Commands {
             '/commands' => function ($message) {
                 return "/toJSON -> Returns in JSON format the data of the replied message\n/commands -> Returns a message with the current list of commands";
             },
+            '/toJSON' => function ($message) {
+                return json_encode($message->get_reply_message()->get_data(), JSON_PRETTY_PRINT);
+            },
             '/resolve' => function ($message) {
                 $text = $message->get_text();
                 $words = explode(' ', $text);
