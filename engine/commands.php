@@ -10,20 +10,6 @@ class Commands {
                 return json_encode($message->get_reply_message()->get_data(), JSON_PRETTY_PRINT);
             },
             '/toHTML' => function ($message) {
-                /*
-                return "
-                    <h1>Title 1</h1>
-                    <h2>Title 2</h2>
-                    <h3>Title 3</h3>
-                    <h4>Title 4</h4>
-                    <p>Paragraph</p>
-                    <b>Bold</b>
-                    <i>Italic</i>
-                    <code>Monospace code</code>
-                    <q>Quote</q>
-                    <button>Button</button>
-                ";
-                */
                 return "<b>Bold</b><i>Italic</i><code>Monospace code</code><u>Underline</u>";
             },
             '/resolve' => function ($message) {
