@@ -10,6 +10,7 @@ class Commands {
                 return json_encode($message->get_reply_message()->get_data(), JSON_PRETTY_PRINT);
             },
             '/toHTML' => function ($message) {
+                /*
                 return "
                     <h1>Title 1</h1>
                     <h2>Title 2</h2>
@@ -22,6 +23,8 @@ class Commands {
                     <q>Quote</q>
                     <button>Button</button>
                 ";
+                */
+                return "<h1>Title 1</h1>";
             },
             '/resolve' => function ($message) {
                 $text = $message->get_text();
