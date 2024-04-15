@@ -7,10 +7,14 @@ class Commands {
                 return "/toJSON -> Returns in JSON format the data of the replied message\n/commands -> Returns a message with the current list of commands";
             },
             '/toJSON' => function ($message) {
-                return json_encode($message->get_reply_message()->get_data(), JSON_PRETTY_PRINT);
+                if ($message->get_reply_message()) {
+                    return json_encode($message->get_reply_message()->get_data(), JSON_PRETTY_PRINT);
+                } else {
+                    return "/toJSON command must be sent as a reply to a message";
+                }
             },
             '/toHTML' => function ($message) {
-                return `
+                return <<<EOT
                 <b>bold</b>, <strong>bold</strong>
                 <i>italic</i>, <em>italic</em>
                 <u>underline</u>, <ins>underline</ins>
@@ -24,7 +28,7 @@ class Commands {
                 <pre>pre-formatted fixed-width code block</pre>
                 <pre><code class="language-python">pre-formatted fixed-width code block written in the Python programming language</code></pre>
                 <blockquote>Block quotation started\nBlock quotation continued\nThe last line of the block quotation</blockquote>
-                `;
+                EOT;
             },
             '/resolve' => function ($message) {
                 $text = $message->get_text();
