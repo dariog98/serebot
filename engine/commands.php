@@ -10,7 +10,7 @@ class Commands {
                 return json_encode($message->get_reply_message()->get_data(), JSON_PRETTY_PRINT);
             },
             '/toHTML' => function ($message) {
-                return "<b>Bold</b><i>Italic</i><code>Monospace code</code><u>Underline</u>";
+                return "<b>Bold</b><br><i>Italic</i>\n<code>Monospace code</code>\n<u>Underline</u>";
             },
             '/resolve' => function ($message) {
                 $text = $message->get_text();
