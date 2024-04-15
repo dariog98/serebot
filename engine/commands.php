@@ -24,7 +24,7 @@ class Commands {
                     <button>Button</button>
                 ";
                 */
-                return "<h1>Title 1</h1>";
+                return "<b>Bold</b><i>Italic</i><code>Monospace code</code><u>Underline</u>";
             },
             '/resolve' => function ($message) {
                 $text = $message->get_text();
