@@ -9,7 +9,7 @@ class Commands {
         $CommandsData[$chat_id]['commands'][$command] = [
             'message' => $message
         ];
-        file_put_contents('../data/commands.json', json_encode($CommandsData));
+        file_put_contents('../data/commands.json', json_encode($CommandsData, JSON_PRETTY_PRINT));
     }
 
     private static function get_commands() {
@@ -44,7 +44,17 @@ class Commands {
             '/save' => function ($message) {
                 $text = $message->get_text();
                 $words = explode(' ', $text);
+                
+                if ($message->get_reply_message() == null) {
+                    return "/save command must be sent as a reply to a message";
+                }
+
                 $messageToSave = $message->get_reply_message()->get_text();
+
+                if ($words[1] == '') {
+                    return 'Message command can not be empty';
+                }
+
                 $newCommand = sprintf('/%s', $words[1]);
                 self::save_command($message->get_chat()->get_id(), $newCommand, $messageToSave);
                 return sprintf('Message saved in command %s', $newCommand);
