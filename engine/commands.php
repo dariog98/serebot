@@ -1,6 +1,17 @@
 <?php
 
 class Commands {
+    private static $UsersCommands = array();
+
+    private static function save_command($chat_id, $command, $message) {
+        $CommandsFile = file_get_contents('../data/commands.json', true);
+        $CommandsData = json_decode($CommandsFile, true);
+        $CommandsData[$chat_id]['commands'][$command] = [
+            'message' => $message
+        ];
+        file_put_contents('../data/commands.json', json_encode($CommandsData));
+    }
+
     private static function get_commands() {
         return [
             '/commands' => function ($message) {
@@ -30,6 +41,14 @@ class Commands {
                 <blockquote>Block quotation started\nBlock quotation continued\nThe last line of the block quotation</blockquote>
                 EOT;
             },
+            '/save' => function ($message) {
+                $text = $message->get_text();
+                $words = explode(' ', $text);
+                $messageToSave = $message->get_reply_message()->get_text();
+                $newCommand = sprintf('/%s', $words[1]);
+                self::save_command($message->get_chat()->get_id(), $newCommand, $messageToSave);
+                return sprintf('Message saved in command %s', $newCommand);
+            },
             '/resolve' => function ($message) {
                 $text = $message->get_text();
                 $words = explode(' ', $text);
@@ -55,8 +74,15 @@ class Commands {
         
                 return $result;
             },
-            'default' => function($message) {
-                return "Please send a valid command\nUse /commands to see the list of available commands";
+            'default' => function($command, $message) {
+                $CommandsFile = file_get_contents('../data/commands.json', true);
+                $CommandsData = json_decode($CommandsFile, true);
+
+                if ($CommandsData[$message->get_chat()->get_id()]['commands'][$command]) {
+                    return $CommandsData[$message->get_chat()->get_id()]['commands'][$command]['message'];
+                } else {
+                    return "Please send a valid command\nUse /commands to see the list of available commands";
+                }
             }
         ];
     }
@@ -66,7 +92,7 @@ class Commands {
         
         $response = ($commands[$command])
         ? $commands[$command]($message)
-        : $commands['default']($message);
+        : $commands['default']($command, $message);
         return $response;
     }
 }
