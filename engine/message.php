@@ -53,13 +53,17 @@ class Message {
         return $this->reply_to_message;
     }
 
+    public function has_reply_message() {
+        return $this->reply_to_message != null;
+    }
+
     public function get_data() {
         return array(
             "chat" => $this->chat->get_data(),
             "user" => $this->user->get_data(),
             "text" => $this->text,
             "sticker" => $this->sticker ? $this->sticker->get_data() : null,
-            "reply_to_message" => $this->reply_to_message ? $this->reply_to_message->get_data() : null
+            "reply_to_message" => $this->has_reply_message() ? $this->reply_to_message->get_data() : null
         );
     }
 
@@ -117,7 +121,7 @@ class Message {
             }
         }
     
-        if (isset($data["reply_to_message"])) {
+        if ( isset($data["reply_to_message"]) ) {
             $message->add_reply_message(Message::create_message_from_data($data["reply_to_message"]));
         }
     
