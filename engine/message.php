@@ -117,7 +117,7 @@ class Message {
             }
         }
     
-        if ( isset($data["reply_to_message"]) ) {
+        if (isset($data["reply_to_message"])) {
             $message->add_reply_message(Message::create_message_from_data($data["reply_to_message"]));
         }
     
